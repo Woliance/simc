@@ -74,6 +74,7 @@ struct paladin_td_t : public actor_target_data_t
     buff_t* final_reckoning;
     buff_t* sanctify;
     buff_t* eye_of_tyr;
+    buff_t* refining_fire;
     buff_t* crusaders_resolve;
     buff_t* heartfire;  // T30 2p Prot
     buff_t* empyrean_hammer;

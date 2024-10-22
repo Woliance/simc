@@ -180,6 +180,7 @@ struct avengers_shield_base_t : public paladin_spell_t
 
     if ( p()->is_ptr() && p()->talents.refining_fire->ok() )
     {
+      td( s->target )->debuff.refining_fire->trigger();
       p()->active.refining_fire->target = s->target;
       p()->active.refining_fire->execute();
     }

@@ -106,6 +106,7 @@ public:
     action_t* judgment_of_light;
     action_t* shield_of_vengeance_damage;
     action_t* zeal;
+    action_t* hammer_and_anvil_damage;
 
     action_t* inner_light_damage;
     action_t* sanctified_wrath;
@@ -874,6 +875,7 @@ public:
   void adjust_health_percent();
   void cast_holy_armaments( player_t* target, armament usedArmament, bool changeArmament, bool random );
   void trigger_greater_judgment( paladin_td_t* targetdata, int num_stacks );
+  void trigger_hammer_and_anvil( action_state_t* s );
 
   // Returns true if AW/Crusade is up, or if the target is below 20% HP.
   // This isn't in HoW's target_ready() so it can be used in the time_to_hpg expression

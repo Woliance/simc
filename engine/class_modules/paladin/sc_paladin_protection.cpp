@@ -370,6 +370,15 @@ struct blessed_hammer_t : public paladin_spell_t
       // To Do: Investigate refresh behaviour
       td( s->target )
           ->debuff.blessed_hammer->trigger( 1, s->attack_power * p()->talents.blessed_hammer->effectN( 1 ).percent() );
+      if ( p()->talents.lightsmith.hammer_and_anvil->ok() && s->result == RESULT_CRIT && p()->sets->has_set_bonus(HERO_LIGHTSMITH, TWW3, B2) )
+      {
+        if ( p()->cooldowns.tww3_lightsmith_2p_icd->up() )
+        {
+        p()->active.hammer_and_anvil_damage->set_target( s->target );
+        p()->active.hammer_and_anvil_damage->schedule_execute();
+        p()->cooldowns.tww3_lightsmith_2p_icd->start();
+        }
+      }
     }
   };
 
@@ -618,6 +627,16 @@ struct hammer_of_the_righteous_t : public paladin_melee_attack_t
       hotr_aoe->schedule_execute( state );
     }
     p()->buffs.lightsmith.blessed_assurance->expire();
+    if ( p()->talents.lightsmith.hammer_and_anvil->ok() && s->result == RESULT_CRIT &&
+         p()->sets->has_set_bonus( HERO_LIGHTSMITH, TWW3, B2 ) )
+    {
+        if ( p()->cooldowns.tww3_lightsmith_2p_icd->up() )
+        {
+            p()->active.hammer_and_anvil_damage->set_target( s->target );
+            p()->active.hammer_and_anvil_damage->schedule_execute();
+            p()->cooldowns.tww3_lightsmith_2p_icd->start();
+        }
+    }
   }
 
   action_state_t* new_state() override
@@ -707,36 +726,18 @@ struct eye_of_tyr_t : public paladin_spell_t
 
 struct judgment_prot_t : public judgment_t
 {
-  // This should be in the main Paladin file, but that would need much restructuring. Since Holy is not implemented anyways ..
-  struct hammer_and_anvil_t : public paladin_spell_t
-  {
-    // ToDo (Fluttershy): Find out how Hammer and Anvil behaves above 5 targets
-    hammer_and_anvil_t( paladin_t* p ) : paladin_spell_t( "hammer_and_anvil", p, p->find_spell( 433717 ) )
-    {
-      background = proc = may_crit = true;
-      may_miss                     = false;
-      aoe                          = -1;
-    }
-  };
 
   heartfire_t* heartfire;
   int judge_holy_power, sw_holy_power;
-  hammer_and_anvil_t* hammer_and_anvil;
   judgment_prot_t( paladin_t* p, util::string_view name, util::string_view options_str )
     : judgment_t( p, name ),
       heartfire( nullptr ),
       judge_holy_power( as<int>( p->find_spell( 220637 )->effectN( 1 ).base_value() ) ),
-      sw_holy_power( as<int>( p->talents.sanctified_wrath->effectN( 3 ).base_value() ) ),
-      hammer_and_anvil( nullptr )
+      sw_holy_power( as<int>( p->talents.sanctified_wrath->effectN( 3 ).base_value() ) )
   {
     parse_options( options_str );
     cooldown->charges += as<int>( p->talents.crusaders_judgment->effectN( 1 ).base_value() );
     triggers_higher_calling = true;
-    if (p->talents.lightsmith.hammer_and_anvil->ok())
-    {
-      hammer_and_anvil = new hammer_and_anvil_t( p );
-      add_child( hammer_and_anvil );
-    }
   }
 
   void execute() override
@@ -765,8 +766,8 @@ struct judgment_prot_t : public judgment_t
 
     if ( p()->talents.lightsmith.hammer_and_anvil->ok() && s->result == RESULT_CRIT )
     {
-      hammer_and_anvil->set_target( s->target );
-      hammer_and_anvil->execute();
+      p()->active.hammer_and_anvil_damage->set_target( s->target );
+      p()->active.hammer_and_anvil_damage->schedule_execute();
     }
   }
 };

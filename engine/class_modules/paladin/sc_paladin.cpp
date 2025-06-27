@@ -1646,6 +1646,17 @@ struct inner_light_damage_t : public paladin_spell_t
   }
 };
 
+struct hammer_and_anvil_t : public paladin_spell_t
+{
+  hammer_and_anvil_t( paladin_t* p ) 
+      : paladin_spell_t( "hammer_and_anvil", p, p->find_spell( 433717 ) )
+  {
+    background = proc = may_crit = true;
+    may_miss                     = false;
+    aoe                          = -1;
+  }
+};
+
 // Base Judgment spell ======================================================
 
 judgment_t::judgment_t( paladin_t* p, util::string_view name ) :
@@ -3561,6 +3572,10 @@ void paladin_t::create_actions()
     {
       active.inner_light_damage = new inner_light_damage_t( this );
     }
+    if ( talents.lightsmith.hammer_and_anvil->ok() )
+        {
+      active.hammer_and_anvil_damage = new hammer_and_anvil_t( this );
+        }
   }
   // Ret
   else if ( specialization() == PALADIN_RETRIBUTION )

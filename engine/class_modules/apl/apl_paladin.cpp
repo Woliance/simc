@@ -82,32 +82,31 @@ void protection( player_t* p )
   default_->add_action( "use_item,name=algethar_puzzle_box" );
   default_->add_action( "use_items" );
   default_->add_action( "potion,if=buff.avenging_wrath.up" );
-  default_->add_action( "avenging_wrath,if=cooldown.divine_toll.remains<=10" );
+  default_->add_action( "holy_armaments,if=next_armament=holy_bulwark&(cooldown.avenging_wrath.up|buff.avenging_wrath.up)" );
+  default_->add_action( "avenging_wrath,if=cooldown.divine_toll.remains<=10&(hero_tree.templar|(buff.holy_bulwark.up|next_armament=sacred_weapon&cooldown.holy_armaments.charges<2|cooldown.holy_armaments.charges<1))" );
   default_->add_action( "fireblood,if=buff.avenging_wrath.up" );
   default_->add_action( "divine_toll,if=buff.avenging_wrath.up|(!talent.righteous_protector.enabled&cooldown.avenging_wrath.remains>30)" );
   default_->add_action( "hammer_of_light,if=(!buff.undisputed_ruling.up|buff.hammer_of_light_ready.remains<5)&debuff.judgment.up" );
   default_->add_action( "shield_of_the_righteous,if=!buff.hammer_of_light_ready.up|(!buff.hammer_of_light_ready.remains<5&buff.undisputed_ruling.up)|buff.hammer_of_light_free.up|prev_gcd.1.divine_toll" );
-  default_->add_action( "holy_armaments,if=next_armament=sacred_weapon&(buff.sacred_weapon.remains<6|!buff.sacred_weapon.up)" );
+  default_->add_action( "holy_armaments,if=next_armament=sacred_weapon&((buff.sacred_weapon.remains<6|!buff.sacred_weapon.up|(cooldown.avenging_wrath.remains>20&!buff.avenging_wrath.up))|charges=2)" );
   default_->add_action( "hammer_of_wrath,if=buff.hammer_of_light_ready.up&!debuff.judgment.up" );
-  default_->add_action( "hammer_of_wrath,if=hero_tree.lightsmith" );
+  default_->add_action( "hammer_of_wrath,if=hero_tree.lightsmith&full_recharge_time<=gcd*2" );
   default_->add_action( "judgment,if=buff.hammer_of_light_ready.up&!debuff.judgment.up" );
   default_->add_action( "avengers_shield,if=buff.vanguard.up|(buff.avenging_wrath.up&apex.3)" );
-  default_->add_action( "holy_armaments,if=next_armament=holy_bulwark&cooldown.avenging_wrath.remains<5" );
-  default_->add_action( "consecration,if=buff.divine_guidance.stack>=5" );
+  default_->add_action( "holy_armaments,if=next_armament=holy_bulwark&cooldown.avenging_wrath.remains<3" );
+  default_->add_action( "consecration,if=buff.divine_guidance.stack=5" );
   default_->add_action( "hammer_of_wrath" );
   default_->add_action( "judgment,if=full_recharge_time<=gcd*2" );
   default_->add_action( "avengers_shield" );
-  default_->add_action( "consecration,if=!consecration.up" );
   default_->add_action( "hammer_of_the_righteous,if=buff.blessed_assurance.up" );
   default_->add_action( "blessed_hammer,if=buff.blessed_assurance.up" );
   default_->add_action( "judgment" );
+  default_->add_action( "consecration,if=buff.divine_guidance.stack>=4" );
   default_->add_action( "holy_armaments,if=next_armament=holy_bulwark&charges=2" );
-  default_->add_action( "consecration,if=!consecration.up" );
   default_->add_action( "blessed_hammer" );
   default_->add_action( "hammer_of_the_righteous" );
   default_->add_action( "arcane_torrent" );
   default_->add_action( "word_of_glory,if=buff.shining_light_free.up" );
-  default_->add_action( "consecration" );
 }
 //protection_apl_end
 }  // namespace paladin_apl
